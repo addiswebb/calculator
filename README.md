@@ -1,2 +1,2 @@
 # calculator
-Text based calculator written in C
+Console based calculator written in C

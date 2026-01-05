@@ -2,7 +2,7 @@
 
 
 int main(void){
-    printf("Starting Calculator");
+    printf("Starting Calculator\n");
     last_result.value = 0.0;
     last_result.type = FLOAT;
     char* original_input = malloc(sizeof(char)*100);
@@ -26,13 +26,14 @@ int main(void){
         enum ParseFlag parse_flag = EQUATION;
         last_result = parse(input,100, &parse_flag);
 
-        if (parse_flag == EQUATION){
+        if (parse_flag == EQUATION && last_result.type != ERROR){
             printf("\033[F\033[K>> %s = ",original_input);
             printVar(last_result);
             printf("\n");
         }
     }
 
+    // Clean up
     for (int i = 0; i < MAX_VARIABLES; i ++){
        	if (variableNames[i] != NULL){
            	free(variableNames[i]);

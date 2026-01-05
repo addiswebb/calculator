@@ -38,6 +38,7 @@ Var parseToken(char *input);
 Var solve (Var a, Var b, char operator);
 int op_priority(char op);
 void printVar(Var v);
+void printError(char* str, char* token);
 
 #define NUMBER_OF_CONSTANTS 3
 #define MAX_VARIABLES 20
@@ -105,7 +106,7 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag ){
             }else if(input[i] == '='){
                 // Otherwise check if its a variable declaration
                 if (*parse_flag == VARIABLE){
-                    printf("\n\n INVALID SYNTAX, MORE THAN ONE EQUALS SIGN NOT ALLOWED!! =");
+                    printError("INVALID SYNTAX, SINGLE EQUALS SIGN ONLY", "");
                     exit(0);
                 }else{
                     *parse_flag = VARIABLE;
@@ -122,14 +123,14 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag ){
     }
 
     if (end_i == -1){
-        printf("\n\nERROR: NO END OF STRING FOUND!");
+        printError("NO END OF STRING FOUND!", "");
         exit(1);
     }
     if (bracket_depth>0){
-        printf("\nERROR: NO BRACKETS ARE COOKED");
+        printError("NO BRACKETS ARE COOKED", "");
         exit(1);
     }
-    // If the whole token is within brackets (#), parse inside #
+    // If the whole token is within brackets '(#)', parse '#'
     if(operator_i == -1 && input[0]=='(' && input[end_i-1]==')'){
         input[end_i-1]='\0';
         return parse(input+1, end_i-1, parse_flag);
@@ -137,14 +138,11 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag ){
 
     // If no operator was found, this must be a singular token
     if (operator_i == -1){
-        // recurse the as a whole token,
-        // its some sort of singular token
         return parseToken(input);
     }else{
         // Otherwise, the equation must take the form @<operator>#
         // Where @ is either (#) or a singular token
         // And # is any other equation
-
         char operator = input[operator_i];
 
         size_t first_length = operator_i;
@@ -176,7 +174,7 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag ){
             if (!var_already_exists){
                 // Check validity of name
                 if (!isalpha(first_token[0])){
-                    printf("\n\nTRIED TO CREATE VARIABLE WITH NON-APLHA FIRST ");
+                    printError("TRIED TO CREATE VARIABLE WITH NON-ALPHA FIRST CHARACTER: ", first_token);
                     exit(1);
                 }
                 // Allocate for new var name,
@@ -221,6 +219,11 @@ int op_priority(char op){
 
 Var solve (Var a, Var b, char operator){
     Var v;
+    if (a.type == ERROR || b.type == ERROR){
+        v.type = ERROR;
+        v.value = 0.0;
+        return v;
+    }
     // Ordered by order of operators, left to right
     switch(operator){
         case '~':
@@ -237,21 +240,27 @@ Var solve (Var a, Var b, char operator){
             break;
     	case '^':
     		v.value = pow(a.value, b.value);
+            v.type = FLOAT;
             break;
         case '%':
  			v.value = (float)((int)(a.value) % (int)(b.value));
+            v.type = FLOAT;
             break;
        case '*':
 			v.value = a.value * b.value;
+            v.type = FLOAT;
 			break;
 		case '/':
 			v.value = a.value / b.value;
+            v.type = FLOAT;
 			break;
 		case '+':
 			v.value = a.value + b.value;
+            v.type = FLOAT;
 			break;
 		case '-':
 			v.value = a.value - b.value;
+            v.type = FLOAT;
 			break;
 		case 'x':
 		default:
@@ -323,10 +332,11 @@ Var parseToken(char *token) {
             return res;
         }
     }
+    // At this point, the token should be some literal number e.g "2", "3.167" etc
     double val = atof(token);
     // Check (if atof failed => 0) also ensure string is not actually 0
     if (val == 0 && strcmp(token, "0") != 0){
-        printf("\nFAILED TO PARSE TOKEN %s\n", token);
+        printError("FAILED TO PARSE TOKEN", token);
         res.type = ERROR;
         res.value = 0.0;
     }else{
@@ -344,5 +354,10 @@ void printVar(Var v){
             printf("%s", (bool) v.value ? "true" : "false");
             break;
         default:
+            return;
     }
+}
+
+void printError(char* str, char* token){
+    printf("ERROR: %s %s\n\n",str, token);
 }
