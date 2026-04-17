@@ -1,0 +1,7 @@
+---
+IndentWidth: 4
+ColumnLimit: 140
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortEnumsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+---
