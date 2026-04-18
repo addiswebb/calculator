@@ -1,4 +1,5 @@
 #include "calculator.c"
+#include <stdio.h>
 
 int main() {
     CONSTANTS_NAMES[0] = "PI";
@@ -15,13 +16,17 @@ int main() {
     if (original_input == NULL) {
         exit(1);
     }
+
+    printf("0");
     while (1) {
-        char input[100];
-        printf(">> ");
+        char input[100] = {};
         FILE *my_stdin = fdopen(0, "r");
         fgets(input, sizeof(input), my_stdin);
-        if (strcmp(input, "\n") == 0 || strcmp(input, "exit\n") == 0) {
-            printf("Ending Calculator.");
+        if (input[0] - '\n' == 0) {
+            printf("Ending Calculator.\n");
+            return 0;
+        } else if (strcmp(input, "exit\n") == 0) {
+            printf("Ending Calculator.\n");
             return 0;
         }
 
@@ -31,7 +36,9 @@ int main() {
                 break;
             }
         }
+
         memcpy(original_input, input, sizeof(char) * 100);
+
         format(input);
 
         enum ParseFlag parse_flag = EQUATION;
