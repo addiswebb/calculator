@@ -1,6 +1,13 @@
 #include "calculator.c"
 
-int main(void) {
+int main() {
+    CONSTANTS_NAMES[0] = "PI";
+    CONSTANTS_NAMES[1] = "E";
+    CONSTANTS_NAMES[2] = "root2";
+
+    CONSTANTS_VALUES[0] = 3.14159265358979323846;
+    CONSTANTS_VALUES[1] = 2.71828182845904523536;
+    CONSTANTS_VALUES[2] = 1.41421356237309504880;
     printf("Starting Calculator\n");
     last_result.value = 0.0;
     last_result.type = FLOAT;
@@ -11,7 +18,8 @@ int main(void) {
     while (1) {
         char input[100];
         printf(">> ");
-        fgets(input, sizeof(input), stdin);
+        FILE *my_stdin = fdopen(0, "r");
+        fgets(input, sizeof(input), my_stdin);
         if (strcmp(input, "\n") == 0 || strcmp(input, "exit\n") == 0) {
             printf("Ending Calculator.");
             return 0;

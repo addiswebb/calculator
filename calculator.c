@@ -5,7 +5,6 @@
         Output: = 10;
 */
 
-#include <ctype.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -29,6 +28,7 @@ typedef enum {
 typedef struct {
     double value;
     Type type;
+    long _p;
 } Var;
 
 Var parse(char *input, int length, enum ParseFlag *parse_flag);
@@ -37,26 +37,35 @@ bool is_operator(char c);
 Var parseToken(char *input);
 Var solve(Var a, Var b, char operator);
 int op_priority(char op);
+bool isAlpha(char c);
 void printVar(Var v);
 void printError(char *str, char *token);
+double pow(double a, double b) {
+    if (b == 0) return 1;
+    return a * pow(a, b - 1);
+}
 
 #define NUMBER_OF_CONSTANTS 3
 #define MAX_VARIABLES 20
 
-const char *CONSTANTS_NAMES[NUMBER_OF_CONSTANTS] = {"PI", "E", "root2"};
+char *CONSTANTS_NAMES[NUMBER_OF_CONSTANTS];
 
-const double CONSTANTS_VALUES[NUMBER_OF_CONSTANTS] = {3.14159265358979323846, 2.71828182845904523536, 1.41421356237309504880};
+double CONSTANTS_VALUES[NUMBER_OF_CONSTANTS];
 
-static Var last_result;
+Var last_result;
 
-static char *variableNames[MAX_VARIABLES];
-static Var variables[MAX_VARIABLES];
-static int variableCount = 0;
+char *variableNames[MAX_VARIABLES];
+Var variables[MAX_VARIABLES];
+int variableCount = 0;
 
 void format(char *input) {
     int cursor = 0;
     for (int i = 0; i < (int)strlen(input); i++) {
-        input[cursor++] = isspace(input[i]) ? input[++i] : input[i];
+        if (input[i] == ' ') {
+            input[cursor++] = input[++i];
+        } else {
+            input[cursor++] = input[i];
+        }
     }
     input[cursor] = '\0';
 }
@@ -98,7 +107,7 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag) {
             } else if (input[i] == '=') {
                 // Otherwise check if its a variable declaration
                 if (*parse_flag == VARIABLE) {
-                    printError("INVALID SYNTAX, SINGLE EQUALS SIGN ONLY", "");
+                    printError("INVALID SYNTAX, SINGLE EQUALS SIGN ONLY", " ");
                     exit(0);
                 } else {
                     *parse_flag = VARIABLE;
@@ -115,11 +124,11 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag) {
     }
 
     if (end_i == -1) {
-        printError("NO END OF STRING FOUND!", "");
+        printError("NO END OF STRING FOUND!", " ");
         exit(1);
     }
     if (bracket_depth > 0) {
-        printError("NO BRACKETS ARE COOKED", "");
+        printError("NO BRACKETS ARE COOKED", " ");
         exit(1);
     }
     // If the whole token is within brackets '(#)', parse '#'
@@ -165,14 +174,16 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag) {
             // Otherwise create a new variable
             if (!var_already_exists) {
                 // Check validity of name
-                if (!isalpha(first_token[0])) {
+                if (!isAlpha(first_token[0])) {
                     printError("TRIED TO CREATE VARIABLE WITH NON-ALPHA FIRST CHARACTER: ", first_token);
                     exit(1);
                 }
                 // Allocate for new var name,
                 size_t size = sizeof(char) * first_length + 1;
                 char *p = malloc(size);
-                if (!p) exit(1);
+                if (p == NULL) {
+                    exit(1);
+                }
                 memcpy(p, first_token, size);
                 // Set next availible variable spot to new pointer in heap
                 variableNames[variableCount] = p;
@@ -339,16 +350,22 @@ Var parseToken(char *token) {
 }
 
 void printVar(Var v) {
-    switch (v.type) {
+    Type t = v.type;
+    switch (t) {
     case FLOAT:
         printf("%g", v.value);
         break;
     case BOOL:
-        printf("%s", (bool)v.value ? "true" : "false");
+        if (v.value) {
+            printf("true");
+        } else {
+            printf("false");
+        }
         break;
     default:
         return;
     }
 }
+bool isAlpha(char c) { return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'); }
 
 void printError(char *str, char *token) { printf("ERROR: %s %s\n\n", str, token); }
