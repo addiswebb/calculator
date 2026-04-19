@@ -28,7 +28,9 @@ typedef enum {
 typedef struct {
     double value;
     Type type;
-    long _p;
+    long _p1;
+    long _p2;
+    long _p3;
 } Var;
 
 Var parse(char *input, int length, enum ParseFlag *parse_flag);
@@ -83,6 +85,7 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag) {
     char current_operator = '\0';
     int end_i = -1;
     int bracket_depth = 0;
+
     for (int i = 0; i < length + 1; i++) {
         // Skip Tokens within brackets, handled later
         // Ensures we dont try and solve (a+b) + c, as '(a'+'b)+c'
@@ -98,7 +101,7 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag) {
                 int next_priority = op_priority(input[i]);
                 int current_priority = op_priority(current_operator);
                 // Left to right for exp ^, 2^3^3 = 2^(3^4), reverse to normal
-                if (!(current_operator == '^' && input[i] == '^')) {
+                if (current_operator != '^' || input[i] != '^') {
                     if (operator_i == -1 || next_priority <= current_priority) {
                         operator_i = i;
                         current_operator = input[i];
@@ -131,6 +134,7 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag) {
         printError("NO BRACKETS ARE COOKED", " ");
         exit(1);
     }
+
     // If the whole token is within brackets '(#)', parse '#'
     if (operator_i == -1 && input[0] == '(' && input[end_i - 1] == ')') {
         input[end_i - 1] = '\0';
@@ -156,6 +160,7 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag) {
         char *rest_token = malloc(sizeof(char) * rest_length);
         rest_token[rest_length] = '\0';
         memcpy(rest_token, input + operator_i + 1, sizeof(char) * rest_length);
+
 #if DEBUG
         printf("%s '%c' %s\n", first_token, operator, rest_token);
 #endif
@@ -192,11 +197,15 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag) {
                 return var;
             }
         }
-        Var v = solve(parse(first_token, first_length, parse_flag), parse(rest_token, rest_length, parse_flag), operator);
-        return v;
+
+        Var lhs = parse(first_token, first_length, parse_flag);
+        Var rhs = parse(rest_token, rest_length, parse_flag);
+
+        Var v = solve(lhs, rhs, operator);
 
         free(first_token);
         free(rest_token);
+        return v;
     }
 }
 
@@ -230,15 +239,15 @@ Var solve(Var a, Var b, char operator) {
     // Ordered by order of operators, left to right
     switch (operator) {
     case '~':
-        v.value = a.value == b.value;
+        v.value = (int)a.value == (int)b.value;
         v.type = BOOL;
         break;
     case '<':
-        v.value = a.value < b.value;
+        v.value = (int)a.value < (int)b.value;
         v.type = BOOL;
         break;
     case '>':
-        v.value = a.value > b.value;
+        v.value = (int)a.value > (int)b.value;
         v.type = BOOL;
         break;
     case '^':
@@ -250,6 +259,7 @@ Var solve(Var a, Var b, char operator) {
         v.type = FLOAT;
         break;
     case '*':
+    case 'x':
         v.value = a.value * b.value;
         v.type = FLOAT;
         break;
@@ -265,7 +275,6 @@ Var solve(Var a, Var b, char operator) {
         v.value = a.value - b.value;
         v.type = FLOAT;
         break;
-    case 'x':
     default:
         printf("No operator given");
         v.type = ERROR;
@@ -339,7 +348,7 @@ Var parseToken(char *token) {
     // At this point, the token should be some literal number e.g "2", "3.167" etc
     double val = atof(token);
     // Check (if atof failed => 0) also ensure string is not actually 0
-    if (val == 0 && strcmp(token, "0") != 0) {
+    if ((int)val == 0 && strcmp(token, "0") != 0) {
         printError("FAILED TO PARSE TOKEN", token);
         res.type = ERROR;
         res.value = 0.0;

@@ -2,6 +2,10 @@
 #include <stdio.h>
 
 int main() {
+
+    char res[] = "#[F#[K>> %s = ";
+    res[0] = 27;
+    res[3] = 27;
     CONSTANTS_NAMES[0] = "PI";
     CONSTANTS_NAMES[1] = "E";
     CONSTANTS_NAMES[2] = "root2";
@@ -17,9 +21,9 @@ int main() {
         exit(1);
     }
 
-    printf("0");
     while (1) {
         char input[100] = {};
+        printf(">> ");
         FILE *my_stdin = fdopen(0, "r");
         fgets(input, sizeof(input), my_stdin);
         if (input[0] - '\n' == 0) {
@@ -45,7 +49,7 @@ int main() {
         last_result = parse(input, 100, &parse_flag);
 
         if (parse_flag == EQUATION && last_result.type != ERROR) {
-            printf("\033[F\033[K>> %s = ", original_input);
+            printf(res, original_input);
             printVar(last_result);
             printf("\n");
         }
