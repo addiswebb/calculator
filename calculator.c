@@ -42,10 +42,6 @@ int op_priority(char op);
 bool isAlpha(char c);
 void printVar(Var v);
 void printError(char *str, char *token);
-double pow(double a, double b) {
-    if (b == 0) return 1;
-    return a * pow(a, b - 1);
-}
 
 #define NUMBER_OF_CONSTANTS 3
 #define MAX_VARIABLES 20
@@ -60,6 +56,18 @@ char *variableNames[MAX_VARIABLES];
 Var variables[MAX_VARIABLES];
 int variableCount = 0;
 
+void init_calculator() {
+    CONSTANTS_NAMES[0] = "PI";
+    CONSTANTS_NAMES[1] = "E";
+    CONSTANTS_NAMES[2] = "root2";
+
+    CONSTANTS_VALUES[0] = 3.14159265358979323846;
+    CONSTANTS_VALUES[1] = 2.71828182845904523536;
+    CONSTANTS_VALUES[2] = 1.41421356237309504880;
+
+    last_result.value = 0.0;
+    last_result.type = FLOAT;
+}
 void format(char *input) {
     int cursor = 0;
     for (int i = 0; i < (int)strlen(input); i++) {
@@ -85,8 +93,9 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag) {
     char current_operator = '\0';
     int end_i = -1;
     int bracket_depth = 0;
+    int real_length = strlen(input);
 
-    for (int i = 0; i < length + 1; i++) {
+    for (int i = 0; i <= real_length; i++) {
         // Skip Tokens within brackets, handled later
         // Ensures we dont try and solve (a+b) + c, as '(a'+'b)+c'
         if (input[i] == '(') {
@@ -151,13 +160,13 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag) {
         char operator = input[operator_i];
 
         size_t first_length = operator_i;
-        char *first_token = malloc(sizeof(char) * first_length);
+        char *first_token = malloc(first_length + 1);
         memcpy(first_token, input, sizeof(char) * first_length);
         first_token[first_length] = '\0';
 
         size_t rest_length = end_i - operator_i - 1;
 
-        char *rest_token = malloc(sizeof(char) * rest_length);
+        char *rest_token = malloc(rest_length + 1);
         rest_token[rest_length] = '\0';
         memcpy(rest_token, input + operator_i + 1, sizeof(char) * rest_length);
 
@@ -202,7 +211,6 @@ Var parse(char *input, int length, enum ParseFlag *parse_flag) {
         Var rhs = parse(rest_token, rest_length, parse_flag);
 
         Var v = solve(lhs, rhs, operator);
-
         free(first_token);
         free(rest_token);
         return v;
@@ -239,15 +247,15 @@ Var solve(Var a, Var b, char operator) {
     // Ordered by order of operators, left to right
     switch (operator) {
     case '~':
-        v.value = (int)a.value == (int)b.value;
+        v.value = a.value == b.value;
         v.type = BOOL;
         break;
     case '<':
-        v.value = (int)a.value < (int)b.value;
+        v.value = a.value < b.value;
         v.type = BOOL;
         break;
     case '>':
-        v.value = (int)a.value > (int)b.value;
+        v.value = a.value > b.value;
         v.type = BOOL;
         break;
     case '^':
@@ -348,7 +356,7 @@ Var parseToken(char *token) {
     // At this point, the token should be some literal number e.g "2", "3.167" etc
     double val = atof(token);
     // Check (if atof failed => 0) also ensure string is not actually 0
-    if ((int)val == 0 && strcmp(token, "0") != 0) {
+    if (val == 0 && strcmp(token, "0") != 0) {
         printError("FAILED TO PARSE TOKEN", token);
         res.type = ERROR;
         res.value = 0.0;

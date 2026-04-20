@@ -2,20 +2,14 @@
 #include <stdio.h>
 
 int main() {
+    printf("Starting Calculator\n");
 
     char res[] = "#[F#[K>> %s = ";
     res[0] = 27;
     res[3] = 27;
-    CONSTANTS_NAMES[0] = "PI";
-    CONSTANTS_NAMES[1] = "E";
-    CONSTANTS_NAMES[2] = "root2";
 
-    CONSTANTS_VALUES[0] = 3.14159265358979323846;
-    CONSTANTS_VALUES[1] = 2.71828182845904523536;
-    CONSTANTS_VALUES[2] = 1.41421356237309504880;
-    printf("Starting Calculator\n");
-    last_result.value = 0.0;
-    last_result.type = FLOAT;
+    init_calculator();
+
     char *original_input = malloc(sizeof(char) * 100);
     if (original_input == NULL) {
         exit(1);
@@ -26,10 +20,7 @@ int main() {
         printf(">> ");
         FILE *my_stdin = fdopen(0, "r");
         fgets(input, sizeof(input), my_stdin);
-        if (input[0] - '\n' == 0) {
-            printf("Ending Calculator.\n");
-            return 0;
-        } else if (strcmp(input, "exit\n") == 0) {
+        if (input[0] == '\n' || strcmp(input, "exit\n") == 0) {
             printf("Ending Calculator.\n");
             return 0;
         }
