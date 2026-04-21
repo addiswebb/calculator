@@ -288,51 +288,57 @@
     .quad 0x4005555555567a89
 .align 8
 .LC119:
-    .quad 0x400c000000000000
+    .quad 0x0000000000000000
 .align 8
 .LC120:
-    .quad 0x4019c28f5c28f5c3
+    .quad 0x0000000000000000
 .align 8
 .LC121:
-    .quad 0x3fce38e29f9ce8da
+    .quad 0x400c000000000000
 .align 8
 .LC122:
-    .quad 0x4011346412cf0f9e
+    .quad 0x4019c28f5c28f5c3
 .align 8
 .LC123:
-    .quad 0x3ff0000000000000
+    .quad 0x3fce38e29f9ce8da
 .align 8
 .LC124:
-    .quad 0x40428148e4c4d4f5
+    .quad 0x4011346412cf0f9e
 .align 8
 .LC125:
-    .quad 0x4023c7ae147ae148
+    .quad 0x3ff0000000000000
 .align 8
 .LC126:
-    .quad 0x4046800000000000
+    .quad 0x40428148e4c4d4f5
 .align 8
 .LC127:
-    .quad 0xc008000000000000
+    .quad 0x4023c7ae147ae148
 .align 8
 .LC128:
-    .quad 0x4008000000000000
+    .quad 0x4046800000000000
 .align 8
 .LC129:
-    .quad 0xc039000000000000
+    .quad 0xc008000000000000
 .align 8
 .LC130:
-    .quad 0x4003d8262db1d70d
+    .quad 0x4008000000000000
 .align 8
 .LC131:
-    .quad 0x400999999999999a
+    .quad 0xc039000000000000
+.align 8
 .LC132:
-    .byte 'S', 't', 'a', 'r', 't', 'i', 'n', 'g', ' ', 'T', 'e', 's', 't', 's', ' ', '(', '%', 'd', ')', 0x0A, 0
+    .quad 0x4003d8262db1d70d
 .align 8
 .LC133:
-    .quad 0x3eb0c6f7a0b5ed8f
+    .quad 0x400999999999999a
 .LC134:
-    .byte 'T', 'e', 's', 't', ' ', '%', 'd', ' ', 'F', 'a', 'i', 'l', 'e', 'd', ':', ' ', '%', 's', ' ', '=', ' ', '%', 'f', ',', ' ', 'g', 'a', 'v', 'e', ':', ' ', '%', 'l', 'f', 0x0A, 0
+    .byte 'S', 't', 'a', 'r', 't', 'i', 'n', 'g', ' ', 'T', 'e', 's', 't', 's', ' ', '(', '%', 'd', ')', 0x0A, 0
+.align 8
 .LC135:
+    .quad 0x3eb0c6f7a0b5ed8f
+.LC136:
+    .byte 'T', 'e', 's', 't', ' ', '%', 'd', ' ', 'F', 'a', 'i', 'l', 'e', 'd', ':', ' ', '%', 's', ' ', '=', ' ', '%', 'f', ',', ' ', 'g', 'a', 'v', 'e', ':', ' ', '%', 'l', 'f', 0x0A, 0
+.LC137:
     .byte 'P', 'a', 's', 's', 'e', 'd', ' ', '%', 'd', '/', '%', 'd', 0x0A, 0
 .global CONSTANTS_NAMES
 .bss
@@ -4510,9 +4516,12 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movl $0, %eax
-    cvtsi2sd %eax, %xmm0
+    movsd .LC119(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
+    movsd .LC120(%rip), %xmm0
+    movsd %xmm0, -2112(%rbp)
+    movsd -2104(%rbp), %xmm0
+    divsd -2112(%rbp), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $312, %rax
@@ -4520,7 +4529,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC119(%rip), %xmm0
+    movsd .LC121(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $320, %rax
@@ -4528,7 +4537,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC120(%rip), %xmm0
+    movsd .LC122(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $328, %rax
@@ -4536,7 +4545,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC121(%rip), %xmm0
+    movsd .LC123(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $336, %rax
@@ -4544,7 +4553,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC122(%rip), %xmm0
+    movsd .LC124(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $344, %rax
@@ -4552,7 +4561,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC123(%rip), %xmm0
+    movsd .LC125(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $352, %rax
@@ -4560,7 +4569,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC124(%rip), %xmm0
+    movsd .LC126(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $360, %rax
@@ -4568,7 +4577,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC125(%rip), %xmm0
+    movsd .LC127(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $368, %rax
@@ -4576,7 +4585,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC126(%rip), %xmm0
+    movsd .LC128(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $376, %rax
@@ -4584,7 +4593,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC127(%rip), %xmm0
+    movsd .LC129(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $384, %rax
@@ -4592,7 +4601,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC128(%rip), %xmm0
+    movsd .LC130(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $392, %rax
@@ -4600,7 +4609,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC129(%rip), %xmm0
+    movsd .LC131(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $400, %rax
@@ -4608,7 +4617,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC130(%rip), %xmm0
+    movsd .LC132(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $408, %rax
@@ -4616,7 +4625,7 @@ main_0:
     movq -2112(%rbp), %rax
     movsd -2104(%rbp), %xmm2
     movsd %xmm2, (%rax)
-    movsd .LC131(%rip), %xmm0
+    movsd .LC133(%rip), %xmm0
     movsd %xmm0, -2104(%rbp)
     movq -2096(%rbp), %rax
     addq $416, %rax
@@ -4639,7 +4648,7 @@ main_0:
     movq -2096(%rbp), %rax
     movl $0, %ecx
     movl %ecx, (%rax)
-    leaq .LC132(%rip), %rax
+    leaq .LC134(%rip), %rax
     movq %rax, -2096(%rbp)
     leaq -1912(%rbp), %rax
     movq %rax, -2104(%rbp)
@@ -5372,7 +5381,7 @@ main_2:
     movq -2104(%rbp), %rax
     movsd (%rax), %xmm0
     movsd %xmm0, -2104(%rbp)
-    movsd .LC133(%rip), %xmm0
+    movsd .LC135(%rip), %xmm0
     movsd %xmm0, -2112(%rbp)
     subq $32, %rsp
     movsd -2096(%rbp), %xmm0
@@ -5398,7 +5407,7 @@ main_3:
     movl %ecx, (%rax)
     jmp main_5
 main_4:
-    leaq .LC134(%rip), %rax
+    leaq .LC136(%rip), %rax
     movq %rax, -2096(%rbp)
     leaq -1928(%rbp), %rax
     movq %rax, -2104(%rbp)
@@ -5474,7 +5483,7 @@ main_6:
     movl %ecx, (%rax)
     jmp main_1
 main_7:
-    leaq .LC135(%rip), %rax
+    leaq .LC137(%rip), %rax
     movq %rax, -2096(%rbp)
     leaq -1920(%rbp), %rax
     movq %rax, -2104(%rbp)

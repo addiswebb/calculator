@@ -1,4 +1,7 @@
-#include "calculator.c"
+#include "calculator.h"
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
 
 int nearly_equal(double a, double b, double epsilon) {
     if (isnan(a) && isnan(b)) {
@@ -104,7 +107,7 @@ int main() {
         32.000000,
         4096.000000,
         2.6666666667,
-        NAN,
+        0.0 / 0.0,
         3.500000,
         6.440000,
         0.236111,
