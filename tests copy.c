@@ -1,7 +1,5 @@
-#include "calculator.h"
+#include "calculator.c"
 #include <math.h>
-#include <stdio.h>
-#include <string.h>
 
 int nearly_equal(double a, double b, double epsilon) {
     if (isnan(a) && isnan(b)) {
@@ -107,7 +105,7 @@ int main() {
         32.000000,
         4096.000000,
         2.6666666667,
-        0.0 / 0.0,
+        NAN,
         3.500000,
         6.440000,
         0.236111,
@@ -127,25 +125,30 @@ int main() {
     // int test_count = 53;
     int passed_count = 0;
     printf("Starting Tests (%d)\n", test_count);
-    init_calculator();
 
+    char *input = malloc(sizeof(char) * 100);
+    if (input == NULL) {
+        exit(1);
+    }
     for (int i = 0; i < test_count; i++) {
+        bool passed = false;
+
         enum ParseFlag parse_flag = EQUATION;
 
-        char input[100] = {0};
-        strcpy(input, tests[i]);
+        memcpy(input, tests[i], sizeof(char) * 100);
         format(input);
-        last_result = parse(input, 100, &parse_flag);
-        double ans = last_result.value;
+        Var res = parse(input, 100, &parse_flag);
+        double ans = res.value;
 
+        // if (nearly_equal(ans, expected[i], 1e-6)) {
         if (nearly_equal(ans, expected[i], 0.000001)) {
-            // printf("Passed: %s = %lf\n", tests[i], ans);
+            printf("Passed: %s = %lf\n", tests[i], ans);
             passed_count++;
         } else {
-            printf("Test %d Failed: %s = %f, gave: %lf\n", i, tests[i], expected[i], ans);
+            printf("Failed: %s = %f, gave: %f\n", tests[i], expected[i], ans);
         }
     }
-    printf("Passed %d/%d\n", passed_count, test_count);
+    printf("Passed %d/%d", passed_count, test_count);
 
     return 0;
 }

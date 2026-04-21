@@ -1,2 +1,2 @@
 CompileFlags:
-    Add: [-xc]
+    Add: [-xc, -IE:\Dev\compiler_c\libc]
