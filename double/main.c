@@ -3,15 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern char *variableNames[MAX_VARIABLES];
-extern Var last_result;
-
 int main() {
     printf("Starting Calculator\n");
-
-    char res[] = "#[F#[K>> %s = ";
-    res[0] = 27;
-    res[3] = 27;
 
     init_calculator();
 
@@ -26,7 +19,7 @@ int main() {
         FILE *my_stdin = fdopen(0, "r");
         fgets(input, sizeof(input), my_stdin);
         if (input[0] == '\n' || strcmp(input, "exit\n") == 0) {
-            printf("Ending Calculator.\n");
+            printf("\033[F\033[KEnding Calculator.\n");
             return 0;
         }
 
@@ -45,7 +38,7 @@ int main() {
         last_result = parse(input, 100, &parse_flag);
 
         if (parse_flag == EQUATION && last_result.type != ERROR) {
-            printf(res, original_input);
+            printf("\033[F\033[K>> %s = ", original_input);
             printVar(last_result);
             printf("\n");
         }

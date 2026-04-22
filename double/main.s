@@ -3,15 +3,15 @@
 .LC0:
     .byte 'S', 't', 'a', 'r', 't', 'i', 'n', 'g', ' ', 'C', 'a', 'l', 'c', 'u', 'l', 'a', 't', 'o', 'r', 0x0A, 0
 .LC1:
-    .byte '#', '[', 'F', '#', '[', 'K', '>', '>', ' ', '%', 's', ' ', '=', ' ', 0
-.LC2:
     .byte '>', '>', ' ', 0
-.LC3:
+.LC2:
     .byte 'r', 0
-.LC4:
+.LC3:
     .byte 'e', 'x', 'i', 't', 0x0A, 0
+.LC4:
+    .byte 0x1B, '[', 'F', 0x1B, '[', 'K', 'E', 'n', 'd', 'i', 'n', 'g', ' ', 'C', 'a', 'l', 'c', 'u', 'l', 'a', 't', 'o', 'r', '.', 0x0A, 0
 .LC5:
-    .byte 'E', 'n', 'd', 'i', 'n', 'g', ' ', 'C', 'a', 'l', 'c', 'u', 'l', 'a', 't', 'o', 'r', '.', 0x0A, 0
+    .byte 0x1B, '[', 'F', 0x1B, '[', 'K', '>', '>', ' ', '%', 's', ' ', '=', ' ', 0
 .LC6:
     .byte 0x0A, 0
 
@@ -30,36 +30,6 @@ main_0:
     call printf
     addq $176, %rsp
     movl %eax, -192(%rbp)
-    leaq 0(%rbp), %rax
-    movq %rax, -192(%rbp)
-    leaq .LC1(%rip), %rax
-    movq %rax, -200(%rbp)
-    movq -200(%rbp), %rsi
-    movq -192(%rbp), %rdi
-    mov $15, %rdx
-    call memcpy
-    leaq 0(%rbp), %rax
-    movq %rax, -192(%rbp)
-    movq $0, %rax
-    imulq $1, %rax
-    movq %rax, -200(%rbp)
-    movq -192(%rbp), %rax
-    addq -200(%rbp), %rax
-    movq %rax, -192(%rbp)
-    movq -192(%rbp), %rax
-    movb $27, %cl
-    movb %cl, (%rax)
-    leaq 0(%rbp), %rax
-    movq %rax, -192(%rbp)
-    movq $3, %rax
-    imulq $1, %rax
-    movq %rax, -200(%rbp)
-    movq -192(%rbp), %rax
-    addq -200(%rbp), %rax
-    movq %rax, -192(%rbp)
-    movq -192(%rbp), %rax
-    movb $27, %cl
-    movb %cl, (%rax)
     call init_calculator
     leaq -8(%rbp), %rax
     movq %rax, -192(%rbp)
@@ -698,7 +668,7 @@ main_4:
     movq -192(%rbp), %rax
     movb $0, %cl
     movb %cl, (%rax)
-    leaq .LC2(%rip), %rax
+    leaq .LC1(%rip), %rax
     movq %rax, -192(%rbp)
     subq $176, %rsp
     movq -192(%rbp), %rdi
@@ -708,7 +678,7 @@ main_4:
     movl %eax, -192(%rbp)
     leaq -120(%rbp), %rax
     movq %rax, -192(%rbp)
-    leaq .LC3(%rip), %rax
+    leaq .LC2(%rip), %rax
     movq %rax, -200(%rbp)
     movl $0, %edi
     movq -200(%rbp), %rsi
@@ -752,7 +722,7 @@ main_4:
     jnz main_5
     leaq -112(%rbp), %rax
     movq %rax, -192(%rbp)
-    leaq .LC4(%rip), %rax
+    leaq .LC3(%rip), %rax
     movq %rax, -200(%rbp)
     movq -192(%rbp), %rdi
     movq -200(%rbp), %rsi
@@ -767,7 +737,7 @@ main_4:
     testl %eax, %eax
     jz main_6
 main_5:
-    leaq .LC5(%rip), %rax
+    leaq .LC4(%rip), %rax
     movq %rax, -192(%rbp)
     subq $176, %rsp
     movq -192(%rbp), %rdi
@@ -941,7 +911,7 @@ main_12:
     testl %eax, %eax
     jz main_14
 main_13:
-    leaq 0(%rbp), %rax
+    leaq .LC5(%rip), %rax
     movq %rax, -192(%rbp)
     leaq -8(%rbp), %rax
     movq %rax, -200(%rbp)

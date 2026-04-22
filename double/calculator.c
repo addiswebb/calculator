@@ -26,6 +26,7 @@ void init_calculator() {
 
     last_result.value = 0.0;
     last_result.type = FLOAT;
+    return;
 }
 void format(char *input) {
     int cursor = 0;
@@ -37,6 +38,7 @@ void format(char *input) {
         }
     }
     input[cursor] = '\0';
+    return;
 }
 
 Var parse(char *input, int length, enum ParseFlag *parse_flag) {
@@ -339,9 +341,13 @@ void printVar(Var v) {
         }
         break;
     default:
-        return;
+        break;
     }
+    return;
 }
 bool isAlpha(char c) { return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'); }
 
-void printError(char *str, char *token) { printf("ERROR: %s %s\n\n", str, token); }
+void printError(char *str, char *token) {
+    printf("ERROR: %s %s\n\n", str, token);
+    return;
+}

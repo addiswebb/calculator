@@ -42,3 +42,6 @@ extern void init_calculator();
 
 #define NUMBER_OF_CONSTANTS 3
 #define MAX_VARIABLES 20
+
+extern Var last_result;
+extern char *variableNames[MAX_VARIABLES];
